@@ -1,0 +1,34 @@
+@app.route('/')
+def home():
+    return """
+    <h2>📍 Live Location Tracker</h2>
+    <button onclick="track()">Start Tracking</button>
+
+    <script>
+    function sendLocation(position) {
+        alert("Latitude: " + position.coords.latitude);
+
+        fetch('http://10.3.8.145:5000/location', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({
+                latitude: position.coords.latitude,
+                longitude: position.coords.longitude
+            })
+        })
+        .then(() => alert("Sent to server"))
+        .catch(err => alert("Error: " + err));
+    }
+
+    function track() {
+        alert("Button clicked");
+
+        navigator.geolocation.getCurrentPosition(
+            sendLocation,
+            function(error) {
+                alert("GPS Error: " + error.message);
+            }
+        );
+    }
+    </script>
+    """
